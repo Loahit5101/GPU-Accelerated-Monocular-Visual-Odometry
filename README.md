@@ -1,3 +1,3 @@
 # Mono-VO-Learned-Depth
 
-Add GT trajectory and visuualisations
+Add GT trajectory and visualisations
