@@ -1,3 +1,2 @@
-# Mono-VO-Learned-Depth
+# Monocular Visual Odometry
 
-Add GT trajectory and visualisations
