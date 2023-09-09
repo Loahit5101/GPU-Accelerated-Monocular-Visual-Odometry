@@ -2,4 +2,4 @@
 
 Work in progress
 
-Contains Python and C++ scripts to perform Monocular Visual odometry using OpenCv on the KITTI odometry dataset. 
+Contains Python and C++ scripts to perform Monocular Visual odometry using OpenCV on the KITTI odometry dataset. 
