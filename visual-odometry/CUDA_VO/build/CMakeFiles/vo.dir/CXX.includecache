@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/VO.cpp
+/home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/VO_openCV.cpp
 iostream
 -
 fstream

@@ -163,32 +163,32 @@ FAST_cpu.cpp.s:
 	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/FAST_cpu.cpp.s
 .PHONY : FAST_cpu.cpp.s
 
-VO.o: VO.cpp.o
+VO_openCV.o: VO_openCV.cpp.o
 
-.PHONY : VO.o
+.PHONY : VO_openCV.o
 
 # target to build an object file
-VO.cpp.o:
-	$(MAKE) -f CMakeFiles/vo.dir/build.make CMakeFiles/vo.dir/VO.cpp.o
-.PHONY : VO.cpp.o
+VO_openCV.cpp.o:
+	$(MAKE) -f CMakeFiles/vo.dir/build.make CMakeFiles/vo.dir/VO_openCV.cpp.o
+.PHONY : VO_openCV.cpp.o
 
-VO.i: VO.cpp.i
+VO_openCV.i: VO_openCV.cpp.i
 
-.PHONY : VO.i
+.PHONY : VO_openCV.i
 
 # target to preprocess a source file
-VO.cpp.i:
-	$(MAKE) -f CMakeFiles/vo.dir/build.make CMakeFiles/vo.dir/VO.cpp.i
-.PHONY : VO.cpp.i
+VO_openCV.cpp.i:
+	$(MAKE) -f CMakeFiles/vo.dir/build.make CMakeFiles/vo.dir/VO_openCV.cpp.i
+.PHONY : VO_openCV.cpp.i
 
-VO.s: VO.cpp.s
+VO_openCV.s: VO_openCV.cpp.s
 
-.PHONY : VO.s
+.PHONY : VO_openCV.s
 
 # target to generate assembly for a file
-VO.cpp.s:
-	$(MAKE) -f CMakeFiles/vo.dir/build.make CMakeFiles/vo.dir/VO.cpp.s
-.PHONY : VO.cpp.s
+VO_openCV.cpp.s:
+	$(MAKE) -f CMakeFiles/vo.dir/build.make CMakeFiles/vo.dir/VO_openCV.cpp.s
+.PHONY : VO_openCV.cpp.s
 
 # Help Target
 help:
@@ -203,9 +203,9 @@ help:
 	@echo "... FAST_cpu.o"
 	@echo "... FAST_cpu.i"
 	@echo "... FAST_cpu.s"
-	@echo "... VO.o"
-	@echo "... VO.i"
-	@echo "... VO.s"
+	@echo "... VO_openCV.o"
+	@echo "... VO_openCV.i"
+	@echo "... VO_openCV.s"
 .PHONY : help
 
 

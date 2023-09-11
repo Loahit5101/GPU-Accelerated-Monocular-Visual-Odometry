@@ -210,19 +210,22 @@ std::vector<corner> cpu_FAST(unsigned char *input, unsigned *scores, int *mask, 
 
 void run_on_cpu(cv::Mat image) {
 	
-		std::vector<cv::KeyPoint> keypointsD;
+	cv::Mat gray_img;	// create gray copy
+		cv::cvtColor(image, gray_img, cv::COLOR_BGR2GRAY);
+		int* h_circle = (int*)malloc(CIRCLE_SIZE * sizeof(int));
+		int* h_mask = (int*)malloc(MASK_SIZE*MASK_SIZE * sizeof(int));
+		unsigned *h_scores = (unsigned*)malloc(image.cols*image.rows * sizeof(int));
+		create_circle(h_circle, image.cols);
+		create_mask(h_mask, image.cols);
+		std::vector<corner> points = cpu_FAST(gray_img.data, h_scores, h_mask, h_circle, image.cols, image.rows);
 
-		cv::Ptr<cv::FastFeatureDetector> detector = cv::FastFeatureDetector::create(threshold, true);
-		detector->detect(image, keypointsD, cv::Mat());
-		// cv::cvtColor(image, image, cv::COLOR_GRAY2BGR);
-		for (int i = 0; i < keypointsD.size(); i++) {
-			cv::circle(image, keypointsD[i].pt, 5, cv::Scalar(0, 255, 0), 2);
+		for (int i = 0; i < points.size(); i++) {
+			cv::circle(image, cv::Point(points[i].x, points[i].y), 5, cv::Scalar(0, 255, 0), 2);
 		}
 	
-	
-	//cv::Size size(1280, 720);	// resize for testing
-	//resize(image, image, size);
-	//show_image(image);
+	cv::Size size(1280, 720);	// resize for testing
+	resize(image, image, size);
+	show_image(image);
 }
 
 

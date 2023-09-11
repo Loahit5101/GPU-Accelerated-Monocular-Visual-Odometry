@@ -57,27 +57,27 @@ include CMakeFiles/vo.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/vo.dir/flags.make
 
-CMakeFiles/vo.dir/VO.cpp.o: CMakeFiles/vo.dir/flags.make
-CMakeFiles/vo.dir/VO.cpp.o: ../VO.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/vo.dir/VO.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vo.dir/VO.cpp.o -c /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/VO.cpp
+CMakeFiles/vo.dir/VO_openCV.cpp.o: CMakeFiles/vo.dir/flags.make
+CMakeFiles/vo.dir/VO_openCV.cpp.o: ../VO_openCV.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/vo.dir/VO_openCV.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vo.dir/VO_openCV.cpp.o -c /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/VO_openCV.cpp
 
-CMakeFiles/vo.dir/VO.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vo.dir/VO.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/VO.cpp > CMakeFiles/vo.dir/VO.cpp.i
+CMakeFiles/vo.dir/VO_openCV.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vo.dir/VO_openCV.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/VO_openCV.cpp > CMakeFiles/vo.dir/VO_openCV.cpp.i
 
-CMakeFiles/vo.dir/VO.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vo.dir/VO.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/VO.cpp -o CMakeFiles/vo.dir/VO.cpp.s
+CMakeFiles/vo.dir/VO_openCV.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vo.dir/VO_openCV.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/VO_openCV.cpp -o CMakeFiles/vo.dir/VO_openCV.cpp.s
 
 # Object files for target vo
 vo_OBJECTS = \
-"CMakeFiles/vo.dir/VO.cpp.o"
+"CMakeFiles/vo.dir/VO_openCV.cpp.o"
 
 # External object files for target vo
 vo_EXTERNAL_OBJECTS =
 
-vo: CMakeFiles/vo.dir/VO.cpp.o
+vo: CMakeFiles/vo.dir/VO_openCV.cpp.o
 vo: CMakeFiles/vo.dir/build.make
 vo: /usr/lib/x86_64-linux-gnu/libopencv_stitching.so.4.2.0
 vo: /usr/lib/x86_64-linux-gnu/libopencv_aruco.so.4.2.0

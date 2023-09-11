@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/vo.dir/VO.cpp.o"
+  "CMakeFiles/vo.dir/VO_openCV.cpp.o"
   "vo"
   "vo.pdb"
 )
