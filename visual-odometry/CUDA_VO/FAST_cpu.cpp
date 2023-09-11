@@ -20,6 +20,9 @@ typedef struct corner {
 	unsigned x;
 	unsigned y;
 
+       bool operator()(const corner &c1, const corner &c2) {
+		return c1.score > c2.score;
+	}
 } corner;
 
 bool comparator(unsigned char pixel_val, unsigned char circle_val, int threshold, char sign) {
@@ -223,9 +226,11 @@ void run_on_cpu(cv::Mat image) {
 			cv::circle(image, cv::Point(points[i].x, points[i].y), 5, cv::Scalar(0, 255, 0), 2);
 		}
 	
-	cv::Size size(1280, 720);	// resize for testing
-	resize(image, image, size);
+	//cv::Size size(1280, 720);	// resize for testing
+	//resize(image, image, size);
 	show_image(image);
+	
+	
 }
 
 
