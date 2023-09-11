@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/loahit/Downloads/CUDA_VO
+CMAKE_SOURCE_DIR = /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/loahit/Downloads/CUDA_VO/build
+CMAKE_BINARY_DIR = /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/loahit/Downloads/CUDA_VO/build/CMakeFiles /home/loahit/Downloads/CUDA_VO/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/loahit/Downloads/CUDA_VO/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named fast
+
+# Build rule for target.
+fast: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 fast
+.PHONY : fast
+
+# fast build rule for target.
+fast/fast:
+	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/build
+.PHONY : fast/fast
+
+#=============================================================================
 # Target rules for targets named vo
 
 # Build rule for target.
@@ -122,6 +135,33 @@ vo: cmake_check_build_system
 vo/fast:
 	$(MAKE) -f CMakeFiles/vo.dir/build.make CMakeFiles/vo.dir/build
 .PHONY : vo/fast
+
+FAST_cpu.o: FAST_cpu.cpp.o
+
+.PHONY : FAST_cpu.o
+
+# target to build an object file
+FAST_cpu.cpp.o:
+	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/FAST_cpu.cpp.o
+.PHONY : FAST_cpu.cpp.o
+
+FAST_cpu.i: FAST_cpu.cpp.i
+
+.PHONY : FAST_cpu.i
+
+# target to preprocess a source file
+FAST_cpu.cpp.i:
+	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/FAST_cpu.cpp.i
+.PHONY : FAST_cpu.cpp.i
+
+FAST_cpu.s: FAST_cpu.cpp.s
+
+.PHONY : FAST_cpu.s
+
+# target to generate assembly for a file
+FAST_cpu.cpp.s:
+	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/FAST_cpu.cpp.s
+.PHONY : FAST_cpu.cpp.s
 
 VO.o: VO.cpp.o
 
@@ -158,7 +198,11 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... fast"
 	@echo "... vo"
+	@echo "... FAST_cpu.o"
+	@echo "... FAST_cpu.i"
+	@echo "... FAST_cpu.s"
 	@echo "... VO.o"
 	@echo "... VO.i"
 	@echo "... VO.s"

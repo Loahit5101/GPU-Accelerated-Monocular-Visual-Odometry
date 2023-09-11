@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/loahit/Downloads/CUDA_VO/VO.cpp" "/home/loahit/Downloads/CUDA_VO/build/CMakeFiles/vo.dir/VO.cpp.o"
+  "/home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/VO.cpp" "/home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles/vo.dir/VO.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

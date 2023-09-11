@@ -44,15 +44,16 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/loahit/Downloads/CUDA_VO
+CMAKE_SOURCE_DIR = /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/loahit/Downloads/CUDA_VO/build
+CMAKE_BINARY_DIR = /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/fast.dir/all
 all: CMakeFiles/vo.dir/all
 
 .PHONY : all
@@ -63,9 +64,37 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/fast.dir/clean
 clean: CMakeFiles/vo.dir/clean
 
 .PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/fast.dir
+
+# All Build rule for target.
+CMakeFiles/fast.dir/all:
+	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/depend
+	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles --progress-num=1,2 "Built target fast"
+.PHONY : CMakeFiles/fast.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/fast.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/fast.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles 0
+.PHONY : CMakeFiles/fast.dir/rule
+
+# Convenience name for target.
+fast: CMakeFiles/fast.dir/rule
+
+.PHONY : fast
+
+# clean rule for target.
+CMakeFiles/fast.dir/clean:
+	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/clean
+.PHONY : CMakeFiles/fast.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/vo.dir
@@ -74,14 +103,14 @@ clean: CMakeFiles/vo.dir/clean
 CMakeFiles/vo.dir/all:
 	$(MAKE) -f CMakeFiles/vo.dir/build.make CMakeFiles/vo.dir/depend
 	$(MAKE) -f CMakeFiles/vo.dir/build.make CMakeFiles/vo.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/loahit/Downloads/CUDA_VO/build/CMakeFiles --progress-num=1,2 "Built target vo"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles --progress-num=3,4 "Built target vo"
 .PHONY : CMakeFiles/vo.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/vo.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/loahit/Downloads/CUDA_VO/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/vo.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/loahit/Downloads/CUDA_VO/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/loahit/Downloads/Monocular-Visual-Odometry/visual-odometry/CUDA_VO/build/CMakeFiles 0
 .PHONY : CMakeFiles/vo.dir/rule
 
 # Convenience name for target.
