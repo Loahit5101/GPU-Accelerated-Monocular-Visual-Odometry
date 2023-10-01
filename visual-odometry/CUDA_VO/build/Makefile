@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named fast
-
-# Build rule for target.
-fast: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 fast
-.PHONY : fast
-
-# fast build rule for target.
-fast/fast:
-	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/build
-.PHONY : fast/fast
-
-#=============================================================================
 # Target rules for targets named vo
 
 # Build rule for target.
@@ -135,33 +122,6 @@ vo: cmake_check_build_system
 vo/fast:
 	$(MAKE) -f CMakeFiles/vo.dir/build.make CMakeFiles/vo.dir/build
 .PHONY : vo/fast
-
-FAST_cpu.o: FAST_cpu.cpp.o
-
-.PHONY : FAST_cpu.o
-
-# target to build an object file
-FAST_cpu.cpp.o:
-	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/FAST_cpu.cpp.o
-.PHONY : FAST_cpu.cpp.o
-
-FAST_cpu.i: FAST_cpu.cpp.i
-
-.PHONY : FAST_cpu.i
-
-# target to preprocess a source file
-FAST_cpu.cpp.i:
-	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/FAST_cpu.cpp.i
-.PHONY : FAST_cpu.cpp.i
-
-FAST_cpu.s: FAST_cpu.cpp.s
-
-.PHONY : FAST_cpu.s
-
-# target to generate assembly for a file
-FAST_cpu.cpp.s:
-	$(MAKE) -f CMakeFiles/fast.dir/build.make CMakeFiles/fast.dir/FAST_cpu.cpp.s
-.PHONY : FAST_cpu.cpp.s
 
 VO_openCV.o: VO_openCV.cpp.o
 
@@ -198,11 +158,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... fast"
 	@echo "... vo"
-	@echo "... FAST_cpu.o"
-	@echo "... FAST_cpu.i"
-	@echo "... FAST_cpu.s"
 	@echo "... VO_openCV.o"
 	@echo "... VO_openCV.i"
 	@echo "... VO_openCV.s"

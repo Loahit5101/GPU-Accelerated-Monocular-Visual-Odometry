@@ -21,7 +21,7 @@ int main() {
     string gt_pose_dir = "/home/loahit/Downloads/Vis_Odo_project/poses/09.txt";
     string img_data_dir = "/home/loahit/Downloads/Vis_Odo_project/09/image_0";
 
-    Mat trajMap = Mat::zeros(2000, 2000, CV_8UC3);
+    Mat trajMap = Mat::zeros(1000, 1000, CV_8UC3);
 
     vector<String> img_list;
     glob(img_data_dir + "/*.png", img_list, false);
@@ -62,9 +62,9 @@ int main() {
                 return a.distance < b.distance;
             });
 
-            Mat img_matching;
-            drawMatches(prev_img, kp1, curr_img, kp2, matches, img_matching);
-            imshow("feature matching", img_matching);
+            //Mat img_matching;
+            //drawMatches(prev_img, kp1, curr_img, kp2, matches, img_matching);
+            //imshow("feature matching", img_matching);
 
             vector<Point2f> pts1, pts2;
             for (const DMatch &match : matches) {
@@ -94,7 +94,7 @@ int main() {
         cout<<"curr_t.at<double>(0)"<<curr_t.at<double>(0)<<'\n';
         cout<<"curr_t.at<double>(2)"<<curr_t.at<double>(2)<<'\n';
    
-        int offset_draw = 2000 / 2;
+        int offset_draw = 1000 / 2;
         circle(trajMap, Point(curr_t.at<double>(0) + offset_draw, curr_t.at<double>(2) + offset_draw), 1, Scalar(255, 0, 0), 2);
         imshow("Trajectory", trajMap);
         waitKey(1);
