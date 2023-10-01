@@ -28,7 +28,9 @@ TODO:
 
 
 Implement FAST keypoint detection using CUDA - in progress
+
 Implement ORB from scratch using CPU and GPU
+
 Compare and benchmark performance
-Write headers and comments.
-Rewrite into Classes
+
+Write headers and comments.Rewrite into Classes
