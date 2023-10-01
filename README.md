@@ -1,4 +1,4 @@
-# CUDA accelerated Monocular Visual Odometry
+# GPU accelerated Monocular Visual Odometry
 
 This project aims to build a Monocular Visual odometry pipeline using C++, CUDA and OpenCV on the KITTI odometry dataset.  
 
