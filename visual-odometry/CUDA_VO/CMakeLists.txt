@@ -6,6 +6,8 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 
 add_executable( vo VO_openCV.cpp )
+
+add_executable( orb ORB_CPU.cpp )
 target_link_libraries( vo ${OpenCV_LIBS} )
 
 
