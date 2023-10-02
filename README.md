@@ -1,8 +1,10 @@
-# CUDA accelerated Monocular Visual Odometry
+# GPU accelerated Monocular Visual Odometry
 
 This project aims to build a Monocular Visual odometry pipeline using C++, CUDA and OpenCV on the KITTI odometry dataset.  
 
-Main goal is to implement FAST keypoints and ORB features using CUDA and compare performance improvements. Currently it uses openCV to detect ORB features. Implementation of ORB feature detection from scratch using CUDA is under progress.
+Main goal is to implement FAST keypoints and ORB features using CUDA and compare performance improvements. 
+
+Currently it uses openCV to detect ORB features. Implementation of ORB feature detection from scratch using CUDA is under progress.
 
 ## Usage
 
