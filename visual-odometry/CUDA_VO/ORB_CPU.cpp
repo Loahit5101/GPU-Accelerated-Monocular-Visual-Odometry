@@ -388,8 +388,3 @@ int main(int argc, char **argv) {
   
   }
   
-/*TODO
-1. Complete ORB
-2. Add own FAST implementation
-3. implement BF matcher
-*/
