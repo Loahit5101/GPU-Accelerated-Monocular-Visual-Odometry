@@ -17,6 +17,7 @@ const double fy = 718.8560;
 const double cx = 607.1928;
 const double cy = 185.2157;
 
+
 int main() {
     string seq = "00";
     string gt_pose_dir = "/home/loahit/Downloads/Vis_Odo_project/poses/09.txt";
@@ -52,17 +53,30 @@ int main() {
 
             Ptr<ORB> orb = ORB::create(6000);
             vector<KeyPoint> kp1, kp2;
-            Mat des1, des2;
-            orb->detectAndCompute(prev_img, Mat(), kp1, des1);
-            orb->detectAndCompute(curr_img, Mat(), kp2, des2);
+            
+            
+            vector<DescType> des1;
+            vector<DescType> des2;
+            
+            
+            ComputeORB(prev_img, kp1, des1);
+            ComputeORB(curr_img, kp2, des2);
+            
+            //orb->detectAndCompute(prev_img, Mat(), kp1, des1);
+            //orb->detectAndCompute(curr_img, Mat(), kp2, des2);
+            
+            vector<cv::DMatch> matches;
+
+            BfMatch(des1, des2, matches);
             
 
-            BFMatcher bf(NORM_HAMMING, true);
-            vector<DMatch> matches;
-            bf.match(des1, des2, matches);
+            
             sort(matches.begin(), matches.end(), [](DMatch a, DMatch b) {
                 return a.distance < b.distance;
             });
+            
+            
+            
 
             //Mat img_matching;
             //drawMatches(prev_img, kp1, curr_img, kp2, matches, img_matching);
