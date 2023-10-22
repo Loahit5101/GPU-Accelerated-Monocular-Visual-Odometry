@@ -1,0 +1,4 @@
+visual-odometry/CUDA_VO/.vscode/
+
+# Exclude SourceTree configuration files
+visual-odometry/CUDA_VO/build/

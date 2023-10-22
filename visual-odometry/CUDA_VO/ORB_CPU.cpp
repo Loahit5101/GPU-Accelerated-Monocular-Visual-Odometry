@@ -2,6 +2,7 @@
 #include <string>
 #include <nmmintrin.h>
 #include <chrono>
+#include "ORB_CPU.h"
 
 using namespace std;
 typedef vector<uint32_t> DescType;
@@ -347,7 +348,7 @@ void BfMatch(const vector<DescType> &desc1, const vector<DescType> &desc2, vecto
   }
 }
 
-
+/*
 int main(int argc, char **argv) {
 
   // load image
@@ -387,4 +388,5 @@ int main(int argc, char **argv) {
   return 0;
   
   }
+  */
   

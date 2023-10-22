@@ -31,30 +31,37 @@ int main() {
     int num_frames = img_list.size();
     cout << num_frames << endl;
 
-        for (int i = 0; i < num_frames; ++i) {
+    for (int i = 0; i < num_frames; ++i) {
        
         img_list[i].erase(img_list[i].begin() + 50);
         img_list[i].erase(img_list[i].begin() + 50);
         
-        }
+    }
+        
     Mat prev_R = Mat::eye(3, 3, CV_64F);
     Mat prev_t = Mat::zeros(3, 1, CV_64F);
 
     for (int i = 0; i < num_frames; ++i) {
         Mat curr_img = imread(img_list[i], IMREAD_GRAYSCALE);
 
+
         Mat curr_R, curr_t;
 
         if (i == 0) {
             curr_R = Mat::eye(3, 3, CV_64F);
             curr_t = Mat::zeros(3, 1, CV_64F);
-        } else {
+        } 
+        
+        else {
+
             Mat prev_img = imread(img_list[i - 1], IMREAD_GRAYSCALE);
 
-            Ptr<ORB> orb = ORB::create(6000);
             vector<KeyPoint> kp1, kp2;
             
             
+            cv::FAST(prev_img, kp1, 40);
+
+            cv::FAST(curr_img, kp2, 40);
             vector<DescType> des1;
             vector<DescType> des2;
             
@@ -62,25 +69,16 @@ int main() {
             ComputeORB(prev_img, kp1, des1);
             ComputeORB(curr_img, kp2, des2);
             
-            //orb->detectAndCompute(prev_img, Mat(), kp1, des1);
-            //orb->detectAndCompute(curr_img, Mat(), kp2, des2);
-            
             vector<cv::DMatch> matches;
 
             BfMatch(des1, des2, matches);
-            
 
-            
+            std::cout<<"matches =      "<<matches.size();
+            cout<<"hellooooo";
             sort(matches.begin(), matches.end(), [](DMatch a, DMatch b) {
                 return a.distance < b.distance;
             });
             
-            
-            
-
-            //Mat img_matching;
-            //drawMatches(prev_img, kp1, curr_img, kp2, matches, img_matching);
-            //imshow("feature matching", img_matching);
 
             vector<Point2f> pts1, pts2;
             for (const DMatch &match : matches) {

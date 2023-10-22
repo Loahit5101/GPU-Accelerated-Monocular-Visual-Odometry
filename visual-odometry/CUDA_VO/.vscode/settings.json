@@ -9,6 +9,8 @@
         "unordered_set": "cpp",
         "vector": "cpp",
         "array": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "valarray": "cpp"
     }
 }
