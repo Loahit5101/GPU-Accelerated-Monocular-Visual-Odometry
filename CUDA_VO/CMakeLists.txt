@@ -19,9 +19,7 @@ target_include_directories(vocpu PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(bf src/ORB_CPU.cpp src/bf_matcher.cu)
 
-add_executable(test src/ORB_CPU.cpp src/test.cu)
 
 target_link_libraries( vo ${OpenCV_LIBS} )
 target_link_libraries( vocpu ${OpenCV_LIBS} )
 target_link_libraries( bf ${OpenCV_LIBS} )
-target_link_libraries( test ${OpenCV_LIBS} )
