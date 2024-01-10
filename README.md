@@ -29,9 +29,9 @@ https://github.com/Loahit5101/Monocular-Visual-Odometry/assets/55102632/4bd119fe
 TODO:
 
 
-Implement FAST keypoint detection using CUDA - in progress
+Implement FAST keypoint detection using CUDA - done -> TODO: integrate with VO
 
-Implement ORB from scratch using CPU and GPU
+Implement ORB from scratch using CPU (done) and GPU
 
 Compare and benchmark performance
 
