@@ -16,6 +16,8 @@ target_include_directories(vo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(vocpu src/VO_CPU.cpp src/ORB_CPU.cpp )
 target_include_directories(vocpu PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+add_executable(vogpu src/VO_openCV_CUDA.cpp )
+target_include_directories(vocpu PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(bf src/ORB_CPU.cpp src/bf_matcher.cu)
 
