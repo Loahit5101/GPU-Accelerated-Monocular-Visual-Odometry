@@ -2,9 +2,9 @@
 
 This project aims to build a Monocular Visual odometry pipeline using C++, CUDA and OpenCV on the KITTI odometry dataset.  
 
-Main goal is to implement FAST keypoints and ORB features using CUDA and compare performance improvements. 
+Main goal is to implement ORB features using CUDA and compare performance improvements. 
 
-Currently it uses openCV to detect ORB features. Implementation of ORB feature detection from scratch using CUDA is under progress.
+It implmenets ORB feature detection from scratch using CPU and CUDA.
 
 ## Usage
 
@@ -16,7 +16,18 @@ cmake ..
 make
 ./vo
 ```
+For CPU VO:
 
+```
+./vocpu
+```
+
+
+For GPU VO:
+
+```
+./vogpu
+```
 
 
 
@@ -27,11 +38,6 @@ https://github.com/Loahit5101/Monocular-Visual-Odometry/assets/55102632/4bd119fe
 
 
 TODO:
-
-
-Implement FAST keypoint detection using CUDA - done -> TODO: integrate with VO
-
-Implement ORB from scratch using CPU (done) and GPU
 
 Compare and benchmark performance
 

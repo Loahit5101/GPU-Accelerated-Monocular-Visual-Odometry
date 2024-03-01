@@ -41,7 +41,7 @@ int main() {
     Mat prev_R = Mat::eye(3, 3, CV_64F);
     Mat prev_t = Mat::zeros(3, 1, CV_64F);
 
-    for (int i = 0; i < num_frames; ++i) {
+    for (int i = 0; i < num_frames/2; ++i) {
         Mat curr_img = imread(img_list[i], IMREAD_GRAYSCALE);
 
 
