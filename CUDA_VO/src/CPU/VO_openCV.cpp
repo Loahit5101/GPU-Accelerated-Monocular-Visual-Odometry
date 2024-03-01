@@ -6,7 +6,7 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "ORB_CPU.h"
+#include "CPU/ORB_CPU.h"
 using namespace std;
 using namespace cv;
 

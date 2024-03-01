@@ -1,4 +1,5 @@
-# include "fast_test.h"
+# include "GPU/fast_test.hpp"
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -79,6 +80,31 @@ void init_gpu(cv::Mat image, int length, int shared_width) {
 	fill_gpu_const_mem(image.cols, shared_width);
 }
 
+void allocate_new_image(cv::Mat image, int length, cudaStream_t stream) {
+	/// create array from image and copy image to device
+	size_t char_size = length * sizeof(unsigned char);
+	h_img = image.data;
+	CHECK_ERROR(cudaMemcpyAsync(d_img_new, h_img, char_size, cudaMemcpyHostToDevice, stream));
+}
+
+void run_fast_algo(cv::Mat image, int shared_width, int length, cudaStream_t work) {
+	/// define grid and block sizes
+	dim3 blocks(BLOCK_SIZE, BLOCK_SIZE);
+	dim3 grid(((int)(image.cols - 1) / BLOCK_SIZE) + 1, ((int)(image.rows - 1) / BLOCK_SIZE) + 1);
+	unsigned char* img_ptr = d_img_new;
+	size_t int_size = length * sizeof(int);
+	CHECK_ERROR(cudaMemsetAsync(d_corner_bools, 0, int_size, work));
+	CHECK_ERROR(cudaMemsetAsync(d_scores, 0, int_size, work));
+	CHECK_ERROR(cudaStreamSynchronize(work));
+
+		/// run kernel and measure the time
+		FAST_global << <grid, blocks, 0, work >> > (img_ptr, d_scores, d_corner_bools, image.cols, image.rows, threshold, pi);
+	
+	
+}
+
+
+
 
 int main(){
 
@@ -93,6 +119,7 @@ int main(){
 	init_gpu(image, length, shared_width);
 	int number_of_corners;
 	cv::cvtColor(image, image_gray, cv::COLOR_BGR2GRAY);
+	allocate_new_image(image_gray, length, 0);
      
 
     return 0;

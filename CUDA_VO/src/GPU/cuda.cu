@@ -1,4 +1,5 @@
-#include "cuda.cuh"
+#include "GPU/cuda.cuh"
+#include "GPU/fast_test.hpp"
 
 __device__  char comparator(unsigned char pixel_val, unsigned char circle_val, int threshold, char sign) {
 	/// return boolean if true ... sign parameter gives us criterion
@@ -93,7 +94,7 @@ __device__ __host__ int fast_test(unsigned char *input, unsigned *scores, unsign
 	}
 }
 
-__global__ void FAST(unsigned char *input, unsigned *scores, unsigned *corner_bools, int width, int height, int threshold, int pi)
+__global__ void FAST_global(unsigned char *input, unsigned *scores, unsigned *corner_bools, int width, int height, int threshold, int pi)
 {
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	int idy = blockIdx.y * blockDim.y + threadIdx.y;
@@ -122,4 +123,18 @@ __global__ void FAST(unsigned char *input, unsigned *scores, unsigned *corner_bo
 	}
 	return;
 }
+
+__global__ void find_corners(unsigned *scanned_array, corner *result, unsigned *scores, int length, int width) {
+	unsigned idx = blockIdx.x * blockDim.x + threadIdx.x;
+	if (idx < length && idx > 0) {
+		int prev = idx - 1;
+		int val = scanned_array[idx];
+		if (scanned_array[prev] < val) {
+			result[val - 1].x = idx % width;
+			result[val - 1].y = idx / width;
+			result[val - 1].score = scores[idx];
+		}
+	}
+}
+
 

@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include <nmmintrin.h>
-#include "ORB_CPU.h"
+#include "CPU/ORB_CPU.h"
 
 #define N 8
 #define BLOCK_SIZE 32

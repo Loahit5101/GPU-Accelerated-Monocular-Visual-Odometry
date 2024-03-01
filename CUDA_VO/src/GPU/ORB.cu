@@ -1,15 +1,19 @@
-#include <opencv2/opencv.hpp>
-#include <string>
-#include <nmmintrin.h>
-#include <chrono>
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <cuda_runtime.h>
 #include "CPU/ORB_CPU.h"
+struct Point {
+    double x;
+    double y;
+};
 
 using namespace std;
-typedef vector<uint32_t> DescType;
 
+constexpr int ORB_pattern_size = 256 * 4; // Assuming ORB_pattern has 256 elements, each containing 4 coordinates
+__constant__ int ORB_pattern_cuda[ORB_pattern_size]; // Declare ORB_pattern in constant memory
 
-// ORB pattern
-int ORB_pattern[256 * 4] = {
+int pattern[256 * 4] = {
   8, -3, 9, 5/*mean (0), correlation (0)*/,
   4, 2, 7, -12/*mean (1.12461e-05), correlation (0.0437584)*/,
   -11, 9, -8, 2/*mean (3.37382e-05), correlation (0.0617409)*/,
@@ -268,133 +272,169 @@ int ORB_pattern[256 * 4] = {
   -1, -6, 0, -11/*mean (0.127148), correlation (0.547401)*/
 };
 
-void ComputeORB(const cv::Mat &img, vector<cv::KeyPoint> &keypoints, vector<DescType> &descriptors) {
-  const int half_patch_size = 8;
-  const int half_boundary = 16;
-  int bad_points = 0;
-  
-  //remove boundary points
-  for (auto &kp: keypoints) {
-    if (kp.pt.x < half_boundary || kp.pt.y < half_boundary ||
-        kp.pt.x >= img.cols - half_boundary || kp.pt.y >= img.rows - half_boundary) {
-      // outside
-      bad_points++;
-      descriptors.push_back({});
-      continue;
-    }
 
-  // compute moments
-    float m01 = 0, m10 = 0;
-    for (int dx = -half_patch_size; dx < half_patch_size; ++dx) {
-      for (int dy = -half_patch_size; dy < half_patch_size; ++dy) {
-        uchar pixel = img.at<uchar>(kp.pt.y + dy, kp.pt.x + dx);
-        m10 += dx * pixel;
-        m01 += dy * pixel;
-      }
-    }
+// Define DescType type (change it according to your actual definition)
+typedef vector<uint32_t> DescType;
 
-    // angle should be arc tan(m01/m10);
-    float m_sqrt = sqrt(m01 * m01 + m10 * m10) + 1e-18; // avoid divide by zero
-    float sin_theta = m01 / m_sqrt;
-    float cos_theta = m10 / m_sqrt;
 
-    // compute the angle of this point
-    DescType desc(8, 0);
-    for (int i = 0; i < 8; i++) {
-      uint32_t d = 0;
-      for (int k = 0; k < 32; k++) {
-        int idx_pq = i * 32 + k;
-        cv::Point2f p(ORB_pattern[idx_pq * 4], ORB_pattern[idx_pq * 4 + 1]);
-        cv::Point2f q(ORB_pattern[idx_pq * 4 + 2], ORB_pattern[idx_pq * 4 + 3]);
+__global__ void ComputeORBKernel(const uchar* img_data, int img_cols, int img_rows, int half_patch_size, int half_boundary, int num_keypoints, const cv::KeyPoint* keypoints, uint32_t* descriptors) {
+        int tid = threadIdx.x + blockIdx.x * blockDim.x;
+    if (tid < num_keypoints) {
 
-        // rotate with theta
-        cv::Point2f pp = cv::Point2f(cos_theta * p.x - sin_theta * p.y, sin_theta * p.x + cos_theta * p.y)
-                         + kp.pt;
-        cv::Point2f qq = cv::Point2f(cos_theta * q.x - sin_theta * q.y, sin_theta * q.x + cos_theta * q.y)
-                         + kp.pt;
-        if (img.at<uchar>(pp.y, pp.x) < img.at<uchar>(qq.y, qq.x)) {
-          d |= 1 << k;
+        int kp_index = tid * 8; // Each keypoint has 8 elements in the descriptor
+         
+
+        // Compute moments
+        float m01 = 0, m10 = 0;
+        for (int dx = -half_patch_size; dx < half_patch_size; ++dx) {
+            for (int dy = -half_patch_size; dy < half_patch_size; ++dy) {
+                uchar pixel = img_data[((int)keypoints[tid].pt.y + dy) * img_cols + ((int)keypoints[tid].pt.x + dx)];
+                m10 += dx * pixel;
+                m01 += dy * pixel;
+            }
         }
-      }
-      desc[i] = d;
 
+        // Compute angles
+        float m_sqrt = sqrt(m01 * m01 + m10 * m10) + 1e-18;
+        float sin_theta = m01 / m_sqrt;
+        float cos_theta = m10 / m_sqrt;
+
+        // Compute descriptor
+        uint32_t desc[8] = {0};
+        for (int i = 0; i < 8; i++) {
+            uint32_t d = 0;
+            for (int k = 0; k < 32; k++) {
+                int idx_pq = i * 32 + k;
+               
+
+                float ppx=cos_theta * ORB_pattern_cuda[idx_pq * 4] - sin_theta * ORB_pattern_cuda[idx_pq * 4 + 1]+(int)keypoints[tid].pt.x;
+                float ppy=sin_theta * ORB_pattern_cuda[idx_pq * 4] + cos_theta * ORB_pattern_cuda[idx_pq * 4 + 1]+(int)keypoints[tid].pt.y;
+
+                float qqx=cos_theta * ORB_pattern_cuda[idx_pq * 4 + 2] - sin_theta * ORB_pattern_cuda[idx_pq * 4 + 3]+(int)keypoints[tid].pt.x;
+                float qqy=sin_theta * ORB_pattern_cuda[idx_pq * 4 + 2]+ cos_theta * ORB_pattern_cuda[idx_pq * 4 + 3]+(int)keypoints[tid].pt.y;
+                
+                if (img_data[(int)ppy * img_cols + (int)ppx] <
+                    img_data[(int)qqy * img_cols + (int)qqx]) {
+                    d |= 1 << k;
+                }
+            }
+            desc[i] = d;
+            
+        }
+
+        // Store descriptor
+        for (int i = 0; i < 8; i++) {
+            descriptors[kp_index + i] = desc[i];
+           
+        }
     }
-    descriptors.push_back(desc);
-  }
-
-  cout << "bad/total: " << bad_points << "/" << keypoints.size() << endl;
 }
 
+vector<DescType> getDescriptors(const uint32_t* descriptors_array, size_t num_descriptors) {
 
-void BfMatch(const vector<DescType> &desc1, const vector<DescType> &desc2, vector<cv::DMatch> &matches) {
-  const int d_max = 40;
- 
-  cout<<" dec1 size = "<<desc1[100].size()<<endl;
-  for (size_t i1 = 0; i1 < desc1.size(); ++i1) {
-    if (desc1[i1].empty()) continue;
-    cv::DMatch m{i1, 0, 256};
-
-    for (size_t i2 = 0; i2 < desc2.size(); ++i2) {
-
-      if (desc2[i2].empty()) continue;
-      int distance = 0;
-
-      for (int k = 0; k < 8; k++) {
-        distance += _mm_popcnt_u32(desc1[i1][k] ^ desc2[i2][k]);
-        
-      }
-
-      if (distance < d_max && distance < m.distance) {
-        m.distance = distance;
-        m.trainIdx = i2;
-      }
-    }
+     vector<DescType> descriptors_vector;
+   
     
-    if (m.distance < d_max) {
-      matches.push_back(m);
+    // Iterate over each descriptor in the array
+    for (size_t i = 0; i < num_descriptors; i += 8) {
+
+        DescType desc;
+        
+        // Insert 8 elements from the C array into the DescType vector
+        for (size_t j = 0; j < 8; ++j) {
+            desc.push_back(descriptors_array[i + j]);
+        }
+        
+        // Push the DescType vector (descriptor) into the descriptors vector
+        descriptors_vector.push_back(desc);
     }
-  }
+    return descriptors_vector;
 }
 
-/*
-int main(int argc, char **argv) {
+vector<DescType> ComputeORB_CUDA(const cv::Mat &img, vector<cv::KeyPoint> &keypoints, vector<DescType> &descriptors) {
+    // Allocate GPU memory
+    vector<DescType> result;
+    uchar* img_gpu;
+    cv::KeyPoint* keypoints_gpu;
+    uint32_t* descriptors_gpu;
+    cudaMemcpyToSymbol(ORB_pattern_cuda, pattern, ORB_pattern_size * sizeof(float));
 
-  // load image
-  cv::Mat first_image = cv::imread("lenna.png", 0);
-  cv::Mat second_image = cv::imread("lenna.png", 0);
-  assert(first_image.data != nullptr && second_image.data != nullptr);
+    cudaMalloc((void**)&img_gpu, img.total() * img.elemSize());
+    cudaMalloc((void**)&keypoints_gpu, keypoints.size() * sizeof(cv::KeyPoint));
+    cudaMalloc((void**)&descriptors_gpu, keypoints.size() * 8 * sizeof(uint32_t));
 
-  // detect FAST keypoints1 using threshold=40
-  chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
-  vector<cv::KeyPoint> keypoints1;
-  
-  cv::FAST(first_image, keypoints1, 40); 
-  vector<DescType> descriptor1;
+    uint32_t *descriptor_array;
+    descriptor_array = (uint32_t *)malloc( keypoints.size() * 8 * sizeof(uint32_t));
 
-  ComputeORB(first_image, keypoints1, descriptor1);
+    // Transfer input data to GPU
+    cudaMemcpy(img_gpu, img.data, img.total() * img.elemSize(), cudaMemcpyHostToDevice);
+    cudaMemcpy(keypoints_gpu, keypoints.data(), keypoints.size() * sizeof(cv::KeyPoint), cudaMemcpyHostToDevice);
 
-  // same for the second
-  vector<cv::KeyPoint> keypoints2;
-  vector<DescType> descriptor2;
-  cv::FAST(second_image, keypoints2, 40);
-  ComputeORB(second_image, keypoints2, descriptor2);
+    // Define block and grid dimensions
+    int block_size = 256;
+    int num_blocks = (keypoints.size() + block_size - 1) / block_size;
+
+    // Launch kernel
+    ComputeORBKernel<<<num_blocks, block_size>>>(img_gpu, img.cols, img.rows, 8, 16, keypoints.size(), keypoints_gpu, descriptors_gpu);
+
+    // Transfer results back to CPU
+    //descriptors.resize(keypoints.size());
+    
+    cudaMemcpy(descriptor_array, descriptors_gpu, keypoints.size() * 8 * sizeof(uint32_t), cudaMemcpyDeviceToHost);
+    
+    result = getDescriptors(descriptor_array,8*keypoints.size());
  
-  cout << "done." << endl;
+    // Free GPU memory
+    cudaFree(img_gpu);
+    cudaFree(keypoints_gpu);
+    cudaFree(descriptors_gpu);
 
-  vector<cv::DMatch> matches;
+    return result;
+}
 
-  BfMatch(descriptor1, descriptor2, matches);
+int main(void) {
 
-  cout << "matches: " << matches.size() << endl;
+cv::Mat image;
 
-  // plot the matches
-  cv::Mat image_show;
-  cv::drawMatches(first_image, keypoints1, second_image, keypoints2, matches, image_show);
-  cv::imshow("matches", image_show);
-  cv::imwrite("matches.png", image_show);
-  cv::waitKey(0);
-  return 0;
-  
-  }
-  */
-  
+cv::Mat image1;
+image = cv::imread("/home/loahit/Downloads/Vis_Odo_project/09/image_0/000000.png", cv::IMREAD_GRAYSCALE);
+image1 = cv::imread("/home/loahit/Downloads/Vis_Odo_project/09/image_0/000001.png", cv::IMREAD_GRAYSCALE);
+vector<cv::KeyPoint> kp1;
+vector<cv::KeyPoint> kp2;
+vector<DescType> descriptors;
+
+vector<DescType> des1;
+vector<DescType> des2;
+            
+cv::FAST(image, kp1, 40);
+
+cv::FAST(image1, kp2, 40);
+
+
+std::cout<<"kp size = "<<kp1.size()<<std::endl;
+
+des1 = ComputeORB_CUDA(image,kp1,des1);
+des2 = ComputeORB_CUDA(image1,kp2,des2);
+
+            vector<cv::DMatch> matches;
+
+            BfMatch(des1, des2, matches);
+
+
+            std::cout<<"matches =      "<<matches.size();
+
+    cv::Mat img_matches;
+    cv::drawMatches(image, kp1, image1, kp2, matches, img_matches, cv::Scalar::all(-1),
+                    cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+
+
+
+cudaDeviceSynchronize();
+
+    // Show the matches
+    cv::imshow("Matches", img_matches);
+    cv::waitKey(0); // Wait for any key press
+return 0;
+
+
+}

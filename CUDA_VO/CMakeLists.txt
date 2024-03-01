@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -O2 ${SSE_FLAGS} -msse4")
+set(CMAKE_CXX_FLAGS "-std=c++14 -O2 ${SSE_FLAGS} -msse4")
 set(CMAKE_CUDA_COMPILER "/usr/local/cuda/bin/nvcc" CACHE BOOL "Cuda compiler (nvcc)")
 
 project(CUDA_VO LANGUAGES CXX CUDA)
+enable_language(CUDA)
+
 
 find_package( OpenCV 4.2.0 REQUIRED )
 
@@ -18,11 +20,16 @@ target_include_directories(vocpu PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(bf src/CPU/ORB_CPU.cpp src/GPU/bf_matcher.cu)
 
+add_executable(orb src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
 
-add_executable(fast_test src/GPU/fast_test.cpp src/GPU/fast.cu)
+#add_executable(vogpu src/GPU/VO_GPU.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
 
 
 target_link_libraries( vo ${OpenCV_LIBS} )
 target_link_libraries( vocpu ${OpenCV_LIBS} )
 target_link_libraries( bf ${OpenCV_LIBS} )
-target_link_libraries( fast_test ${OpenCV_LIBS} )
+target_link_libraries( orb ${OpenCV_LIBS} )
+#target_link_libraries( vogpu ${OpenCV_LIBS} )
+
+
+#cmake -DCMAKE_CUDA_ARCHITECTURES=75 ..
