@@ -1,5 +1,5 @@
-#include "GPU/VO_GPU.h"
-#include "CPU/ORB_CPU.h"
+
+#include "GPU/VO_class.h"
 
 const double width = 1241.0;
 const double height = 376.0;
@@ -8,11 +8,8 @@ const double fy = 718.8560;
 const double cx = 607.1928;
 const double cy = 185.2157;
 
-double cpu_time = 0.0;
-double gpu_time = 0.0;
-using namespace std::chrono;
 
-void computeCameraPose(const vector<Point2f>& pts1, const vector<Point2f>& pts2, Mat& curr_R,Mat& curr_t){
+void VisualOdometry::computeCameraPose(const vector<Point2f>& pts1, const vector<Point2f>& pts2, Mat& curr_R,Mat& curr_t){
 
             Mat E, mask;
             E = findEssentialMat(pts1, pts2, fx, Point2d(cx, cy), RANSAC, 0.999, 1.0, mask);
@@ -20,12 +17,12 @@ void computeCameraPose(const vector<Point2f>& pts1, const vector<Point2f>& pts2,
      
 }
 
-void computeKeypoint(const Mat& curr_img,vector<KeyPoint>& current_kp){
+void VisualOdometry::computeKeypoints(const Mat& curr_img,vector<KeyPoint>& current_kp){
 
             cv::FAST(curr_img, current_kp, 40);
 }
 
-void matchFeatures(const vector<KeyPoint>& prev_kp, const vector<KeyPoint>& current_kp, const vector<DescType>& prev_descriptor, const vector<DescType>& current_descriptor,vector<cv::DMatch>& matches,vector<Point2f>& pts1,vector<Point2f>& pts2){
+void VisualOdometry::matchFeatures(const vector<KeyPoint>& prev_kp, const vector<KeyPoint>& current_kp, const vector<DescType>& prev_descriptor, const vector<DescType>& current_descriptor,vector<cv::DMatch>& matches,vector<Point2f>& pts1,vector<Point2f>& pts2){
 
             BfMatch(prev_descriptor, current_descriptor, matches);
 
@@ -33,43 +30,40 @@ void matchFeatures(const vector<KeyPoint>& prev_kp, const vector<KeyPoint>& curr
                 return a.distance < b.distance;
             });
             
-
             for (const DMatch &match : matches) {
                 pts1.push_back(prev_kp[match.queryIdx].pt);
                 pts2.push_back(current_kp[match.trainIdx].pt);
             }
 }
+void VisualOdometry::computeDescriptor(const Mat& curr_img, vector<KeyPoint>& current_kp,vector<DescType>& current_descriptor){
+     
+     if(descriptor_type=="ORB_GPU"){
+            current_descriptor = ComputeORB_CUDA(curr_img,current_kp,current_descriptor);}
 
+     if(descriptor_type=="ORB_CPU"){
 
-int main() {
-    
-    string img_data_dir = "/home/loahit/Downloads/Vis_Odo_project/09/image_0";
-    vector<String> img_list;
-    glob(img_data_dir + "/*.png", img_list, false);
-    sort(img_list.begin(), img_list.end());
-    int num_frames = img_list.size();
+            current_descriptor = ComputeORB_CPU(curr_img,current_kp,current_descriptor);}       
 
-    for (int i = 0; i < num_frames; ++i) { img_list[i].erase(img_list[i].begin() + 50); img_list[i].erase(img_list[i].begin() + 50);}
-        
-    Mat trajMap = Mat::zeros(1000, 1000, CV_8UC3);
+}
+void VisualOdometry::run_VO(const vector<String>& img_list){
 
-    Mat prev_R = Mat::eye(3, 3, CV_64F);
-    Mat prev_t = Mat::zeros(3, 1, CV_64F);
+  Mat prev_img = imread(img_list[0], IMREAD_GRAYSCALE);
 
-    Mat prev_img = imread(img_list[0], IMREAD_GRAYSCALE);
-    vector<KeyPoint> prev_kp;
-    cv::FAST(prev_img, prev_kp, 40);
+  imshow("Trajectory", trajMap);
+  int num_frames = img_list.size();
+  cv::FAST(prev_img, prev_kp, 40);
+  //imshow("Trajectory", prev_img);
+  //waitKey(0);
+  cout<<"HERE";
 
-    vector<DescType> prev_descriptor;
-    prev_descriptor = ComputeORB_CUDA(prev_img,prev_kp,prev_descriptor);
+  if(descriptor_type=="ORB_GPU"){
+            prev_descriptor = ComputeORB_CUDA(prev_img,prev_kp,prev_descriptor);}
 
+  if(descriptor_type=="ORB_CPU"){
 
-    vector<KeyPoint> current_kp;
-    vector<DescType> current_descriptor;
-    vector<cv::DMatch> matches;
-    vector<Point2f> pts1, pts2;
-
-    for (int i = 0; i < num_frames/2; ++i) {
+            prev_descriptor = ComputeORB_CPU(prev_img,prev_kp,prev_descriptor);}  
+  
+  for (int i = 0; i < num_frames/2; ++i) {
 
         Mat curr_img = imread(img_list[i], IMREAD_GRAYSCALE);
         Mat curr_R, curr_t;
@@ -81,15 +75,12 @@ int main() {
         
         else {
 
-            computeKeypoint(curr_img,current_kp);
+            computeKeypoints(curr_img,current_kp);
 
-            current_descriptor.resize(current_kp.size());
-
-            current_descriptor = ComputeORB_CUDA(curr_img,current_kp,current_descriptor);
-            
+            computeDescriptor(curr_img,current_kp,current_descriptor);
+ 
             matchFeatures(prev_kp,current_kp,prev_descriptor,current_descriptor,matches,pts1,pts2);
 
-            Mat E, mask;
             computeCameraPose(pts1, pts2, curr_R, curr_t);
 
             if (i == 1) {
@@ -126,7 +117,22 @@ int main() {
         waitKey(1);
     }
 
-    imwrite("trajMap.png", trajMap);
+}
+
+int main(){
+
+    string img_data_dir = "/home/loahit/Downloads/Vis_Odo_project/09/image_0";
+    vector<String> img_list;
+    glob(img_data_dir + "/*.png", img_list, false);
+    sort(img_list.begin(), img_list.end());
+    int num_frames = img_list.size();
+
+    for (int i = 0; i < num_frames; ++i) { img_list[i].erase(img_list[i].begin() + 50); img_list[i].erase(img_list[i].begin() + 50);}
+
+    string s = "ORB_GPU";
+
+    VisualOdometry VO(s);
+    VO.run_VO(img_list);
 
     return 0;
 }

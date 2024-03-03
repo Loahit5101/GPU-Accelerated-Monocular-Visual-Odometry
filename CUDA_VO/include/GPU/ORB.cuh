@@ -1,4 +1,4 @@
-#ifndef ORB_CU_H  // Header guard to prevent multiple inclusions
+#ifndef ORB_CU_H  
 #define ORB_CU_H
 
 #include <vector>
