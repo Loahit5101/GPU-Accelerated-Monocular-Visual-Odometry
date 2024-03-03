@@ -6,19 +6,13 @@ set(CMAKE_CUDA_COMPILER "/usr/local/cuda/bin/nvcc" CACHE BOOL "Cuda compiler (nv
 project(CUDA_VO LANGUAGES CXX CUDA)
 enable_language(CUDA)
 
-
 find_package( OpenCV 4.2.0 REQUIRED )
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${OpenCV_INCLUDE_DIRS} )
 include_directories(include)
 
-add_executable( vo src/CPU/VO_openCV.cpp )
-target_include_directories(vo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
 add_executable(vocpu src/CPU/VO_CPU.cpp src/CPU/ORB_CPU.cpp )
 target_include_directories(vocpu PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-add_executable(bf src/CPU/ORB_CPU.cpp src/GPU/bf_matcher.cu)
 
 #add_executable(orb src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
 
@@ -26,14 +20,13 @@ add_executable(vogpu src/GPU/VO_GPU.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
 
 add_executable(benchmark src/GPU/benchmark.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
 
+add_executable(class src/GPU/class.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
 
-target_link_libraries( vo ${OpenCV_LIBS} )
 target_link_libraries( vocpu ${OpenCV_LIBS} )
-target_link_libraries( bf ${OpenCV_LIBS} )
 #target_link_libraries( orb ${OpenCV_LIBS} )
 target_link_libraries( vogpu ${OpenCV_LIBS} )
 target_link_libraries( benchmark ${OpenCV_LIBS} )
-
+target_link_libraries( class ${OpenCV_LIBS} )
 
 
 #cmake -DCMAKE_CUDA_ARCHITECTURES=75 ..

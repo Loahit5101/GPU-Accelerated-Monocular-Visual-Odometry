@@ -268,7 +268,7 @@ int ORB_pattern[256 * 4] = {
   -1, -6, 0, -11/*mean (0.127148), correlation (0.547401)*/
 };
 
-void ComputeORB(const cv::Mat &img, vector<cv::KeyPoint> &keypoints, vector<DescType> &descriptors) {
+vector<DescType> ComputeORB_CPU(const cv::Mat &img,const vector<cv::KeyPoint> &keypoints, vector<DescType> &descriptors) {
   const int half_patch_size = 8;
   const int half_boundary = 16;
   int bad_points = 0;
@@ -323,6 +323,8 @@ void ComputeORB(const cv::Mat &img, vector<cv::KeyPoint> &keypoints, vector<Desc
   }
 
   cout << "bad/total: " << bad_points << "/" << keypoints.size() << endl;
+
+  return descriptors;
 }
 
 

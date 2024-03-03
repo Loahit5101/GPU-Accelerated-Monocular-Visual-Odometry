@@ -72,8 +72,8 @@ int main() {
             vector<DescType> des2;
             
             auto start_CPU = high_resolution_clock::now(); 
-            ComputeORB(prev_img, kp1, des1);
-            ComputeORB(curr_img, kp2, des2);
+            des1 = ComputeORB_CPU(prev_img, kp1, des1);
+            des2 =ComputeORB_CPU(curr_img, kp2, des2);
              auto stop_CPU = high_resolution_clock::now(); // Record stop time
             auto duration_CPU = duration_cast<milliseconds>(stop_CPU - start_CPU);
             cout << "Time taken by CPU: " << duration_CPU.count() << " milliseconds" << endl;

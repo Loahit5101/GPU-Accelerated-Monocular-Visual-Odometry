@@ -12,7 +12,7 @@ double cpu_time = 0.0;
 double gpu_time = 0.0;
 using namespace std::chrono;
 
-void computeCameraPose(vector<Point2f> pts1, vector<Point2f>& pts2, Mat& curr_R,Mat& curr_t){
+void computeCameraPose(const vector<Point2f>& pts1, const vector<Point2f>& pts2, Mat& curr_R,Mat& curr_t){
 
             Mat E, mask;
             E = findEssentialMat(pts1, pts2, fx, Point2d(cx, cy), RANSAC, 0.999, 1.0, mask);
@@ -20,13 +20,12 @@ void computeCameraPose(vector<Point2f> pts1, vector<Point2f>& pts2, Mat& curr_R,
      
 }
 
-void computeKeypoint(const Mat& prev_img, const Mat& curr_img,vector<KeyPoint>& prev_kp,vector<KeyPoint>& current_kp){
+void computeKeypoint(const Mat& curr_img,vector<KeyPoint>& current_kp){
 
-            cv::FAST(prev_img, prev_kp, 40);
             cv::FAST(curr_img, current_kp, 40);
 }
 
-void matchFeatures(vector<KeyPoint>& prev_kp,vector<KeyPoint>& current_kp,vector<DescType>& prev_descriptor,vector<DescType>& current_descriptor,vector<cv::DMatch>& matches,vector<Point2f>& pts1,vector<Point2f>& pts2){
+void matchFeatures(const vector<KeyPoint>& prev_kp, const vector<KeyPoint>& current_kp, const vector<DescType>& prev_descriptor, const vector<DescType>& current_descriptor,vector<cv::DMatch>& matches,vector<Point2f>& pts1,vector<Point2f>& pts2){
 
             BfMatch(prev_descriptor, current_descriptor, matches);
 
@@ -64,6 +63,12 @@ int main() {
     vector<DescType> prev_descriptor;
     prev_descriptor = ComputeORB_CUDA(prev_img,prev_kp,prev_descriptor);
 
+
+    vector<KeyPoint> current_kp;
+    vector<DescType> current_descriptor;
+    vector<cv::DMatch> matches;
+    vector<Point2f> pts1, pts2;
+
     for (int i = 0; i < num_frames/2; ++i) {
 
         Mat curr_img = imread(img_list[i], IMREAD_GRAYSCALE);
@@ -76,16 +81,12 @@ int main() {
         
         else {
 
-            vector<KeyPoint> current_kp;
-            
-            cv::FAST(curr_img, current_kp, 40);
+            computeKeypoint(curr_img,current_kp);
 
-            vector<DescType> current_descriptor;
+            current_descriptor.resize(current_kp.size());
 
             current_descriptor = ComputeORB_CUDA(curr_img,current_kp,current_descriptor);
             
-            vector<cv::DMatch> matches;
-            vector<Point2f> pts1, pts2;
             matchFeatures(prev_kp,current_kp,prev_descriptor,current_descriptor,matches,pts1,pts2);
 
             Mat E, mask;
@@ -106,6 +107,11 @@ int main() {
         // Avoid copy    
         prev_kp = std::move(current_kp);
         prev_descriptor = std::move(current_descriptor);
+
+        matches.clear();
+        pts1.clear();
+        pts2.clear();
+       
         }
         
         prev_img = curr_img;

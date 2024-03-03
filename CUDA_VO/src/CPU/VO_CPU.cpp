@@ -68,8 +68,8 @@ int main() {
             vector<DescType> des2;
             
             
-            ComputeORB(prev_img, kp1, des1);
-            ComputeORB(curr_img, kp2, des2);
+            des1 = ComputeORB_CPU(prev_img, kp1, des1);
+            des2 = ComputeORB_CPU(curr_img, kp2, des2);
             
             vector<cv::DMatch> matches;
 
