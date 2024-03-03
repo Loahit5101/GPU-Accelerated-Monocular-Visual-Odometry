@@ -2,6 +2,10 @@
 
 using namespace std;
 
+
+constexpr int ORB_pattern_size = 256 * 4; // Assuming ORB_pattern has 256 elements, each containing 4 coordinates
+__constant__ int ORB_pattern_cuda[ORB_pattern_size]; // Declare ORB_pattern in constant memory
+
 int pattern[256 * 4] = {
   8, -3, 9, 5/*mean (0), correlation (0)*/,
   4, 2, 7, -12/*mean (1.12461e-05), correlation (0.0437584)*/,

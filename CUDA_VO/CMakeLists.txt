@@ -16,15 +16,13 @@ target_include_directories(vocpu PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 #add_executable(orb src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
 
-add_executable(vogpu src/GPU/VO_GPU.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
-
 add_executable(benchmark src/GPU/benchmark.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
 
-add_executable(class src/GPU/class.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
+add_executable(class src/GPU/VO_class.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
+
 
 target_link_libraries( vocpu ${OpenCV_LIBS} )
 #target_link_libraries( orb ${OpenCV_LIBS} )
-target_link_libraries( vogpu ${OpenCV_LIBS} )
 target_link_libraries( benchmark ${OpenCV_LIBS} )
 target_link_libraries( class ${OpenCV_LIBS} )
 

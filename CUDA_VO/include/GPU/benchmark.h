@@ -1,3 +1,6 @@
+#ifndef BENCHMARK__H  // Header guard to prevent multiple inclusions
+#define BENCHMARK__H
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -11,3 +14,5 @@
 #include "CPU/ORB_CPU.h"
 using namespace std;
 using namespace cv;
+
+#endif // BENCHMARK_H
