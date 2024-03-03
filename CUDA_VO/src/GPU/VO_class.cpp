@@ -119,6 +119,7 @@ void VisualOdometry::run_VO(const vector<String>& img_list){
 
 }
 
+/*
 int main(){
 
     string img_data_dir = "/home/loahit/Downloads/Vis_Odo_project/09/image_0";
@@ -136,3 +137,4 @@ int main(){
 
     return 0;
 }
+*/

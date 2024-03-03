@@ -1,10 +1,9 @@
 # GPU accelerated Monocular Visual Odometry
 
-This project aims to build a Monocular Visual odometry pipeline using C++, CUDA and OpenCV on the KITTI odometry dataset.  
+1. A Monocular Visual odometry pipeline using Modern C++, CUDA and OpenCV on the KITTI odometry dataset.  
 
-Main goal is to implement ORB features using CUDA and compare performance improvements. 
+2. ORB feature computation is implemented using CUDA and compares performance improvements. 
 
-It implmenets ORB feature detection from scratch using CPU and CUDA.
 
 ## Usage
 
@@ -14,31 +13,29 @@ C++
 mkdir build
 cmake ..
 make
-./vo
-```
-For CPU VO:
 
 ```
-./vocpu
-```
 
+- **CPU_VO**: Run CPU Visual Odometry.
+    ```bash
+    ./main IMAGE_PATH ORB_CPU
+    ```
 
-For GPU VO:
+- **GPU_VO**: Run CUDA-accelerated Visual Odometry.
+    ```bash
+    ./main IMAGE_PATH ORB_GPU
+    ```
 
-```
-./vogpu
-```
-
-
+- **benchmark**: Run benchmarking to evaluate the performance of the GPU-accelerated implementation.
+    ```bash
+    ./benchmark
+    ```
 
 
 https://github.com/Loahit5101/Monocular-Visual-Odometry/assets/55102632/4bd119fe-8dd6-41ba-b8f6-920d4204b839
 
 
 
-
 TODO:
 
-Compare and benchmark performance
-
-Write headers and comments.Rewrite into Classes
+Add documentation in code

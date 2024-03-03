@@ -18,13 +18,16 @@ target_include_directories(vocpu PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(benchmark src/GPU/benchmark.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
 
-add_executable(class src/GPU/VO_class.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
+#add_executable(class src/GPU/VO_class.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
+
+add_executable(main src/GPU/main.cpp src/GPU/VO_class.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
 
 
 target_link_libraries( vocpu ${OpenCV_LIBS} )
 #target_link_libraries( orb ${OpenCV_LIBS} )
 target_link_libraries( benchmark ${OpenCV_LIBS} )
-target_link_libraries( class ${OpenCV_LIBS} )
+#target_link_libraries( class ${OpenCV_LIBS} )
+target_link_libraries( main ${OpenCV_LIBS} )
 
 
 #cmake -DCMAKE_CUDA_ARCHITECTURES=75 ..
