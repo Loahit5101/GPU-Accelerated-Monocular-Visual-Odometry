@@ -4,14 +4,15 @@
 
 2. ORB feature computation is implemented using CUDA and compares performance improvements. 
 
-
+## Dependencies
+- OpenCV 4.2.0
+- CUDA
+  
 ## Usage
-
-C++
 
 ```
 mkdir build
-cmake ..
+cmake -DCMAKE_CUDA_ARCHITECTURES= $your_architecture ..
 make
 
 ```
@@ -30,7 +31,14 @@ make
     ```bash
     ./benchmark
     ```
+## Result
 
+## Computation Time Comparison
+
+| Method   | Compute Time for 1600 Images (ms) |
+|----------|-----------------------------------|
+| ORB_CPU  | 20134 ms                          |
+| ORB_CUDA | 4474 ms                           |
 
 https://github.com/Loahit5101/Monocular-Visual-Odometry/assets/55102632/4bd119fe-8dd6-41ba-b8f6-920d4204b839
 
@@ -39,3 +47,4 @@ https://github.com/Loahit5101/Monocular-Visual-Odometry/assets/55102632/4bd119fe
 TODO:
 
 Add documentation in code
+Add tests
