@@ -129,7 +129,7 @@ int main(){
 
     for (int i = 0; i < num_frames; ++i) { img_list[i].erase(img_list[i].begin() + 50); img_list[i].erase(img_list[i].begin() + 50);}
 
-    string s = "ORB_GPU";
+    string s = "ORB_CPU";
 
     VisualOdometry VO(s);
     VO.run_VO(img_list);
