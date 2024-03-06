@@ -11,22 +11,15 @@ find_package( OpenCV 4.2.0 REQUIRED )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${OpenCV_INCLUDE_DIRS} )
 include_directories(include)
 
-#add_executable(vocpu src/CPU/VO_CPU.cpp src/CPU/ORB_CPU.cpp )
-#target_include_directories(vocpu PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-#add_executable(orb src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
-
 add_executable(benchmark src/benchmark.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
-
-#add_executable(class src/GPU/VO_class.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
+target_link_libraries( benchmark ${OpenCV_LIBS} )
 
 add_executable(main src/main.cpp src/GPU/VO_class.cpp src/GPU/ORB.cu src/CPU/ORB_CPU.cpp )
-
-
-#target_link_libraries( vocpu ${OpenCV_LIBS} )
-#target_link_libraries( orb ${OpenCV_LIBS} )
-target_link_libraries( benchmark ${OpenCV_LIBS} )
-#target_link_libraries( class ${OpenCV_LIBS} )
 target_link_libraries( main ${OpenCV_LIBS} )
+
+
+add_executable(bf src/GPU/bf_matcher.cu src/GPU/ORB.cu)
+target_link_libraries( bf ${OpenCV_LIBS} )
 
 
 #cmake -DCMAKE_CUDA_ARCHITECTURES=75 ..

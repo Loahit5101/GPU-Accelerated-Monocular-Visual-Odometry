@@ -318,11 +318,10 @@ __global__ void ComputeORBKernel(const uchar* img_data, int img_cols, int img_ro
     }
 }
 
-vector<DescType> getDescriptors(const uint32_t* descriptors_array, size_t num_descriptors) {
+vector<DescType> getDescriptors(const uint32_t* descriptors_array, vector<cv::KeyPoint> &keypoints, size_t num_descriptors) {
 
      vector<DescType> descriptors_vector;
    
-    
     // Iterate over each descriptor in the array
     for (size_t i = 0; i < num_descriptors; i += 8) {
 
@@ -338,6 +337,7 @@ vector<DescType> getDescriptors(const uint32_t* descriptors_array, size_t num_de
     }
     return descriptors_vector;
 }
+
 
 vector<DescType> ComputeORB_CUDA(const cv::Mat &img, vector<cv::KeyPoint> &keypoints, vector<DescType> &descriptors) {
     // Allocate GPU memory
@@ -370,7 +370,20 @@ vector<DescType> ComputeORB_CUDA(const cv::Mat &img, vector<cv::KeyPoint> &keypo
     
     cudaMemcpy(descriptor_array, descriptors_gpu, keypoints.size() * 8 * sizeof(uint32_t), cudaMemcpyDeviceToHost);
     
-    result = getDescriptors(descriptor_array,8*keypoints.size());
+    result = getDescriptors(descriptor_array,keypoints,8*keypoints.size());
+
+    int half_boundary=16;
+
+    for (int i =0;i<keypoints.size();i++) {
+    
+    //ignore boundary points
+    if (keypoints[i].pt.x < half_boundary || keypoints[i].pt.y < half_boundary ||
+        keypoints[i].pt.x >= img.cols - half_boundary || keypoints[i].pt.y >= img.rows - half_boundary) {
+        result[i]={};
+        continue;
+    }
+
+    }
  
     // Free GPU memory
     cudaFree(img_gpu);
